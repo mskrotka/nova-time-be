@@ -20,29 +20,29 @@ build-prod:
 	docker compose -f docker-compose.prod.yaml up -d --force-recreate --build
 
 fix:
-	docker exec -it name-app python manage.py loaddata core/fixtures/admin_user.json
+	docker exec -it novatime-app python manage.py loaddata core/fixtures/admin_user.json
 
 migrate:
-	docker exec -it name-app python manage.py migrate
+	docker exec -it novatime-app python manage.py migrate
 
 migrations:
-	docker exec -it name-app python manage.py makemigrations
+	docker exec -it novatime-app python manage.py makemigrations
 
 app_shell:
-	docker exec -it name-app bash
+	docker exec -it novatime-app bash
 
 shell_plus:
-	docker exec -it name-app python manage.py shell
+	docker exec -it novatime-app python manage.py shell
 
 test:
-	docker exec -it name-app python manage.py test
+	docker exec -it novatime-app python manage.py test
 
 clean-migrations:
 	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 	find . -path "*/migrations/*.pyc" -delete
 
 startapp:
-	docker exec -it name-app python manage.py startapp $(name)
+	docker exec -it novatime-app python manage.py startapp $(name)
 
 logs:
 	docker logs -f $(container)

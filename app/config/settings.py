@@ -61,6 +61,7 @@ THIRD_PARTY_APPS = ["rest_framework", "simple_history"]
 LOCAL_APPS = [
     "core.apps.CoreConfig",
     "users.apps.UsersConfig",
+    "raport.apps.RaportConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

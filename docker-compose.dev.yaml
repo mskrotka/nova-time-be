@@ -7,7 +7,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    container_name: name-app
+    container_name: novatime-app
     ports:
       - 80:80
     env_file:
@@ -21,8 +21,8 @@ services:
       - ./app/:/app
 
   db:
-    image: postgres:16
-    container_name: name-db
+    image: postgres:18
+    container_name: novatime-db
     ports:
       - 5432:5432
     environment:
