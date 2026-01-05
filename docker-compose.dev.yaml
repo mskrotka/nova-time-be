@@ -1,0 +1,38 @@
+volumes:
+  db_volume:
+
+services:
+  app:
+    tty: true
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: name-app
+    ports:
+      - 80:80
+    env_file:
+      - ./.env
+    command: |
+      python manage.py runserver 0.0.0.0:80
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./app/:/app
+
+  db:
+    image: postgres:16
+    container_name: name-db
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=name
+    volumes:
+      - db_volume:/var/lib/postgres/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

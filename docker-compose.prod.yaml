@@ -1,0 +1,58 @@
+volumes:
+  db_volume:
+  traefik_letsencrypt:
+
+services:
+  traefik:
+    image: traefik:v2.9
+    container_name: traefik
+    command:
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--providers.docker=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.email=[mail]"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "traefik_letsencrypt:/letsencrypt"
+
+  app:
+    tty: true
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: nazwa-app
+    labels:
+      - "traefik.http.routers.app.rule=Host(`[domena]`)"
+      - "traefik.http.routers.app.entrypoints=websecure"
+      - "traefik.http.routers.app.tls.certresolver=myresolver"
+    env_file:
+      - ./.env
+    command: python manage.py runserver 0.0.0.0:80
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./app/:/app
+
+  db:
+    image: postgres:16
+    container_name: nazwa-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=nazwa
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

@@ -1,0 +1,16 @@
+[
+    {
+        "model": "users.CustomUser",
+        "pk": 1,
+        "fields": {
+            "email": "kontakt@michal-swiderski.pl",
+            "password": "pbkdf2_sha256$870000$pCvtZyvcFG0uWBgkr5a0Lx$OyEhPnBl3dRz4F34RGGSYZSvRVySFYBnP6SsCqHzPF8=",
+            "is_staff": "True",
+            "is_superuser": "True",
+            "is_active": "True",
+            "created": "1610841600000",
+            "modified": "1610841600000"
+
+        }
+    }
+]
